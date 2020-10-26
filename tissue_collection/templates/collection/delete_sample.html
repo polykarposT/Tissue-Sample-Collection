@@ -1,0 +1,23 @@
+{% extends 'collection/base.html' %}
+{% block content %}
+<div class="card mx-auto col-6" style="box-shadow:hsl(0, 0%, 80%) 0 0 16px; background-color: #fff; border-radius: 4px; padding: 10px;">
+    <div class="card-body">
+        <h4>Are you sure you want to delete sample: </h4>
+        <hr>
+        <p class="card-text">ID: <b><i>{{ sample.id }}</i></b></p>
+        <p class="card-text">Collection: <b><i>{{ sample.collection }}</i></b></p>
+        <p class="card-text">Collection ID: <b><i>{{ sample.collection.id }}</i></b></p>
+        <p class="card-text">Donor Count: <b><i>{{ sample.donor_count }}</i></b></p>
+        <p class="card-text">Materia Type: <b><i>{{ sample.material_type }}</i></b></p>
+        <p class="card-text">Last Updated: <b><i>{{ sample.last_updated }}</i></b></p>
+        <hr>
+        <form action="{% url 'delete_sample' sample_id=sample.id %}" method="POST">
+            {% csrf_token %}
+            <div class="text-center">
+                <a class="btn btn-primary col-4" href="{% url 'collection' collection_id=sample.collection.id %}">Cancel</a>
+                <button type="submit" class="btn btn-danger col-4">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
