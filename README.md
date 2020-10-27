@@ -203,7 +203,7 @@ In the tissue_collection directory create a new folder with name ```templates```
 
 Create a ```base.html``` file which has all the bootstrap and javascript libraries we need for the project. Django use jinga for frint end so we will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statement, django urls and build block content.
 
-## Views
+## Views & URLS
 In views.py file we create all the neccasary functions to make projects working. In views you can handle data, make queries and forms and render html templates. To make views workind we need to create a ```urls.py```file in the tissue_collection directory. After we created the file add the following code:
 ```
 from django.urls import path
@@ -226,6 +226,7 @@ urlpatterns = [
     path('create_collection/', views.create_collection, name='create_collection'),
 ]
 ```
+Path has the url for example ```samples/```, a view function tha does something, and a name for this path.
 Don't worry for now all those paths are the urls of the projects. We will see them in a while.
 Now your need to open ```urls.py``` from tissue_sample folder and include the urls from tissue_collection folder. So in the urls.py of tissue_sample add:
 ```
@@ -236,3 +237,184 @@ urlpatterns = [
     path('', include('tissue_collection.urls')),
 ]
 ```
+
+### index function view
+Index function has as argument a request (POST or GET) and returns a html tamplete and a context which have all the data the form to create new collection, all collections, collections filter for the search form.
+```
+def index(request):
+    form = CollectionForm() #create collection form
+    collections = Collection.objects.all() # retrieve all collections from database
+    collections_filter = CollectionFilter(request.GET, queryset=collections) #filter that takes arguments request.GET method because is search and collection query
+    collections = collections_filter.qs #filtered collection query
+    context = {'collections': collections, 'form': form, 'collections_filter': collections_filter} #build our context with data to print them in front end
+    return render(request, 'collection/index.html', context) #return our index page with context data
+```
+Url for this function is ```index```
+
+### Samples function view
+Returns all samples
+```
+def samples(request):
+    samples = Sample.objects.all() #return all samples
+    context = {'samples': samples}
+    return render(request, 'collection/samples.html', context)
+```
+Url for this function is ```samples/```
+
+### Sample function view
+Takes as arguments a request and a sample_id and returns all the information of the sample with this id.
+```
+def sample(request,sample_id):
+    sample = get_object_or_404(Sample, id=sample_id) #return sample with id = sample_id or throw 404
+    context = {'sample': sample}
+    return render(request, 'collection/sample.html', context)
+```
+URL for this function is ```sample/<int:sample_id/>```. The int in the url is to let django know that there is an argument whiuch is int.
+
+### Collection function view
+Takes as arguments a request and a sample_id and returns all the information of the collection with this id
+```
+def collection(request, collection_id):
+    collection = get_object_or_404(Collection, id=collection_id) #return collection with id=collection_id or 404
+    samples = collection.sample_set.all() #return all samples which related with this collection
+    sample_form = SampleForm() #create sample for this collection
+    context = {'collection': collection, 'samples': samples, 'sample_form': sample_form,}
+    return render(request, 'collection/collection.html', context)
+```
+URL for this function is ```collection/<int:collection_id>/```
+
+### Create collection function view
+Create a collection. Because we created the CollectionForm previusly django handle the data for us. 
+```
+desease_term    text not null
+title           text not null
+```
+```
+def create_collection(request):
+
+    if request.method == "POST": #check if the request of the form is POST
+        form = CollectionForm(request.POST) #this form has request method
+        if form.is_valid(): # default function from django to check if data of a form are valid
+            desease_term = request.POST['desease_term'] 
+            title = request.POST['title']
+            
+            collection = Collection(desease_term=desease_term, title=title) #create new object with the given values
+            collection.save() #save this object to database
+            return redirect('index') # if everything is ok return to index
+        else:
+            messages.error(request, 'Please enter valid information') #if form is not valid throw error message
+            return redirect('index')
+    else:
+        form = CollectionForm()
+        collections = Collection.objects.all()
+        context = {'collections': collections, 'form': form}
+        return render(request, 'collection/index.html', context)
+```
+URL = ```create_collection/```
+
+### Update Collection function view
+Updates a existing collection. To execute the function you need to pass the collection_id and in the update form as previusly django handle everythin.
+```
+desease_term    text not null
+title           text not null
+```
+```
+def update_collection(request, collection_id):
+    collection = get_object_or_404(Collection, id=collection_id) #return collection with id = collection_id or 404
+    form = CollectionForm(instance=collection) #in the same create collection form check if collection exist and put this collection data into the form
+    if request.method == "POST": #check if method is POST
+        form = CollectionForm(request.POST, instance=collection)
+        if form.is_valid(): #check if form is valid
+            form.save()
+            return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
+        else:
+            messages.error(request, 'Please enter valid information')
+    context = {'form': form, 'collection': collection}
+    return render(request, 'collection/update_collection.html', context)
+```
+URL = ```collection/<int: collection_id>/update/```
+
+### Delete collection function view
+Delete a function with specific id. If you delete this function you also delete all the samples of this collection.
+```
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collection, id=collection_id) #return collection wiht specific id of 404
+    samples = collection.sample_set.all() #if we delete a colletion we will delete also all collection's samples
+    if request.method == "POST": #check if method is POST to delete collection
+        collection.delete()
+        return redirect('index')
+
+    context = {'collection': collection, 'samples': samples}
+    return render(request, 'collection/delete_collection.html', context)
+    
+```
+URL = ```collection/<int: collection_id>/update/```
+
+### Create Sample function view
+Create a Sample for an existing collection. You can create new sample only inside of an existing collection. Here again djnago handle everything. Here also you pass the collection id because you need it to pass it as foreign key.
+```
+donor_count     int not null not negative
+material_type   text not null
+```
+Date fro last updated handle it from database.
+
+```
+def create_sample(request, collection_id):
+    collection = Collection.objects.get(id=collection_id) #return collection with id = collection_id
+    date_now = datetime.datetime.now() #retrieve current date
+    if request.method == "POST":
+        form = SampleForm(request.POST)
+        if form.is_valid():
+            donor_count = request.POST['donor_count']
+            material_type = request.POST['material_type']
+            #save new sample for this collection
+            sample = Sample(collection=collection, donor_count=donor_count,
+                            material_type=material_type, last_updated=date_now)
+            sample.save()
+            #if everything is ok return to this specific collection. We need to use reverse to pass collection id to be able to redirect
+            return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
+        else:
+            messages.error(request, 'Please enter valid information')
+            return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
+
+    return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
+```
+URL = ```collection/<int:collection_id>/create_sample/
+
+### Update Sample function view
+Updates a sample with specific id(sample_id).
+```
+def update_sample(request, sample_id):
+    sample = get_object_or_404(Sample, id=sample_id) #return sample with id = sample_id or 404
+    date_now = datetime.datetime.now() #retrieve current date
+    form = SampleUpdateForm(instance=sample) #pass sample to update form to have access of it's data
+    if request.method == "POST":  #check if method is POST
+        form = SampleUpdateForm(request.POST, instance=sample)
+        if form.is_valid(): #check if method is POST
+            # commit=False tells Django that "Don't send this to database yet.
+            sample = form.save(commit=False)
+            #updating last_updated field in database
+            sample.last_updated = date_now
+            sample.save()
+            return redirect(reverse('sample', kwargs={'sample_id': sample_id}))
+        else:
+            messages.error(request, 'Please enter valid information')
+    context = {'form': form, 'sample':sample}
+    return render(request, 'collection/update_sample.html', context)
+```
+URL = ```sample<int: sample_id>/update/
+
+### Delete Sample function view
+Delete a sample with specific id.
+```
+def delete_sample(request, sample_id):
+    sample = get_object_or_404(Sample, id=sample_id)
+    collection_id = sample.collection.id #keep collection id of the sample to redirect to this collection after delete the sample
+    if request.method == "POST":
+        sample.delete()
+        return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
+    
+    context = {'sample': sample}
+    return render(request, 'collection/delete_sample.html', context)
+```
+URL = ```sample/<int: sample_id>/delete/```
