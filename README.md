@@ -29,3 +29,21 @@ python manage.py runserver  or
 python3 manage.py runserver
 ```
 Now that the server’s running, visit http://127.0.0.1:8000/ with your Web browser. You’ll see a “Congratulations!” page, with a rocket taking off. It worked!
+
+## Create App
+To create your app, make sure you’re in the same directory as manage.py and type this command:
+```
+python manage.py startapp tissue_collection
+```
+That’ll create a directory polls, which is laid out like this:
+```
+tissue_collection/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+```
