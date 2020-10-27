@@ -77,6 +77,7 @@ The variables in every class are actually the columns of the tables. Inside the 
 If you watch carefully you will see that we didn't add a primary key and the reason is bacause Django is doing it automatically. Of course it's only if you want to primary keys like 1,2,3.
 
 Django provides an admin page and the phylosophy is to generating admin sites to add, change, and delete content is tedious work that doesn’t require much creativity. For that reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to do 3 easy steps.
+
 1) go to admin.py and add the following code:
 ```
 from django.contrib import admin
@@ -88,7 +89,7 @@ admin.site.register(Collection)
 admin.site.register(Sample)
 
 ```
-2)In the same directory with ```manage.py``` file run the following commands in terminal:
+2) In the same directory with ```manage.py``` file run the following commands in terminal:
 ```
 python manage.py makemigrations 
 python manage.py migrate #create database for the project as we defined it the models.py file
