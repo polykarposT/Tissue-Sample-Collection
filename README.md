@@ -47,6 +47,20 @@ tissue_collection/
     tests.py
     views.py
 ```
+Now open settings.py and add the tissue_collection project
+```
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'tissue_collection',
+    'django_filters',
+]
+
+```
 ## Models
 This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the databae. Models are the tables in the database.
 ```
@@ -103,3 +117,41 @@ password: test1234
 ```
 Now you can add data from here!
 
+## HTML Templates
+In the tissue_collection directory create a new folder with name ```templates``` and inside templates folder create a new folder with name ```collection```. There are all the html code for the project.
+
+Create a ```base.html``` file which has all the bootstrap and javascript libraries we need for the project. Django use jinga for frint end so we will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statement, django urls and build block content.
+
+## Views
+In views.py file we create all the neccasary functions to make projects working. In views you can handle data, make queries and forms and render html templates. To make views workind we need to create a ```urls.py```file in the tissue_collection directory. After we created the file add the following code:
+```
+from django.urls import path
+from . import views
+
+#URLs that will call our views 
+# For example if you want to retrive all samples you will write in the url 127.0.0.1:8000/samples/
+# django automatically will try to match url with an existing view
+ 
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('samples/', views.samples, name='samples'),
+    path('samples/<int:sample_id>/', views.sample, name='sample'),
+    path('samples/<int:sample_id>/update/', views.update_sample, name='update_sample'),
+    path('sample/<int:sample_id>/delete/', views.delete_sample, name='delete_sample'),
+    path('collection/<int:collection_id>/', views.collection, name='collection'),
+    path('collection/<int:collection_id>/create_sample/', views.create_sample, name='create_sample'),
+    path('collection/<int:collection_id>/update/', views.update_collection, name='update_collection'),
+    path('collection/<int:collection_id>/delete/', views.delete_collection, name='delete_collection'),
+    path('create_collection/', views.create_collection, name='create_collection'),
+]
+```
+Don't worry for now all those paths are the urls of the projects. We will see them in a while.
+Now your need to open ```urls.py``` from tissue_sample folder and include the urls from tissue_collection folder. So in the urls.py of tissue_sample add:
+```
+from django.contrib import admin
+from django.urls import path, include
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('tissue_collection.urls')),
+]
+```
