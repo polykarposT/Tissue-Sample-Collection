@@ -356,7 +356,7 @@ Create a Sample for an existing collection. You can create new sample only insid
 donor_count     int not null not negative
 material_type   text not null
 ```
-Date fro last updated handle it from database.
+Date for last updated handle it from database.
 
 ```
 def create_sample(request, collection_id):
@@ -379,7 +379,7 @@ def create_sample(request, collection_id):
 
     return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
 ```
-URL = ```collection/<int:collection_id>/create_sample/
+URL = ```collection/<int:collection_id>/create_sample/```
 
 ### Update Sample function view
 Updates a sample with specific id(sample_id).
