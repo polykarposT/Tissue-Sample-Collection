@@ -402,7 +402,7 @@ def update_sample(request, sample_id):
     context = {'form': form, 'sample':sample}
     return render(request, 'collection/update_sample.html', context)
 ```
-URL = ```sample<int: sample_id>/update/
+URL = ```sample<int: sample_id>/update/```
 
 ### Delete Sample function view
 Delete a sample with specific id.
