@@ -47,3 +47,58 @@ tissue_collection/
     tests.py
     views.py
 ```
+## Models
+This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the databae. Models are the tables in the database.
+```
+from django.db import models
+
+# Create your models here.
+
+class Collection(models.Model):
+    desease_term = models.CharField(max_length=250)
+    title = models.CharField(max_length=250)
+
+    #Return objects by desease_term for example "Test 1" and not like "Collection.objects.(1)"
+    def __str__(self):
+        return self.desease_term
+
+class Sample(models.Model):
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+    donor_count = models.IntegerField()
+    material_type = models.CharField(max_length=250)
+    last_updated = models.DateField()
+
+    def __str__(self):
+        return str(self.id)
+
+
+```
+The variables in every class are actually the columns of the tables. Inside the classes we added the ``` def __str__``` function to return the data by desease_term. The reason is for readability perpuse because is better to see "Test 1" from "<Collection: Collection object(1)".
+If you watch carefully you will see that we didn't add a primary key and the reason is bacause Django is doing it automatically. Of course it's only if you want to primary keys like 1,2,3.
+
+Django provides an admin page and the phylosophy is to generating admin sites to add, change, and delete content is tedious work that doesn’t require much creativity. For that reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to do 3 easy steps.
+1) go to admin.py and add the following code:
+```
+from django.contrib import admin
+from .models import *
+
+# Register your models here.
+
+admin.site.register(Collection)
+admin.site.register(Sample)
+
+```
+2)In the same directory with ```manage.py``` file run the following commands in terminal:
+```
+python manage.py makemigrations 
+python manage.py migrate #create database for the project as we defined it the models.py file
+
+python manage.py createsuperuser #to use admin pane you need to create an admin account
+```
+3) You are ready! Now visit  http://127.0.0.1:8000/admin/ and login with the username and password you add. In this project the credentials are:
+```
+username: testUser
+password: test1234
+```
+Now you can add data from here!
+
