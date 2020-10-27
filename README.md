@@ -9,6 +9,10 @@ To be able to run the project need to have installed python (python >= 3.8) and 
 ```
 pip install Django
 ```
+For this project have to install also django-filters
+```
+pip install django-filter
+```
 
 ## Start Project
 In the directory that you want to create the project open a terminal or command line and write:
@@ -61,6 +65,83 @@ INSTALLED_APPS = [
 ]
 
 ```
+## Forms
+Create a ```forms.py``` in the tissue_collection directory. There we created 3 forms to create and Update Collections and Samples.
+We use django forms because django provide functions to valiodated form data easy.
+```
+from django import forms
+from .models import Collection, Sample
+
+#create forms for create, and update collections and samples
+ 
+class CollectionForm(forms.ModelForm):
+    class Meta:
+        model = Collection #which model represents 
+        fields = ('title', 'desease_term')
+        #adding bootstrap class to form fields
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title', 'required': 'true', 'type': 'text'}),
+            'desease_term': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Desease term', 'required': 'true', 'type': 'text'}),
+        }
+
+class SampleForm(forms.ModelForm):
+    class Meta:
+        model = Sample
+        fields = ('donor_count','material_type')
+        widgets = {
+            'donor_count': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '90152', 'required': 'true', 'type': 'number', 'min':'0'}),
+            'material_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '"Cerebrospinal fluid"', 'required': 'true', 'type': 'text'})
+        }
+
+
+class SampleUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Sample
+        fields = ('collection','donor_count', 'material_type')
+        widgets = {
+            'collection': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select collection', 'required': 'true'}),
+            'donor_count': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '90152', 'required': 'true', 'type': 'number', 'min': '0'}),
+            'material_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '"Cerebrospinal fluid"', 'required': 'true', 'type': 'text'})
+        }
+```
+We create forms like class. Inside the form class we declare for which model this from is and the fields we want to show at the front end. Widgets are only to pass bootstrap classes. The forms will we use them in views of the project so we need to add them in views.py file.
+```from .forms import CollectionForm, SampleForm, SampleUpdateForm```
+The last thing to do before start views functions is to create a django filter for search perpuses.
+
+## Filters
+Django-filter provides a simple way to filter down a queryset based on parameters a user provides. We need to add it to ```settings.py``` file but we already did it previusly as we add also ```tissue_collection```
+Filters are same, like forms. Create a file in the tissue_collection directory with name ```filters.py``` and add
+```
+import django_filters
+from django import forms
+from .models import *
+
+#create filter to help search for collection.
+
+class CollectionFilter(django_filters.FilterSet):
+    class Meta:
+        #this filter will search for collections
+        model = Collection
+
+        fields = ['title', 'desease_term']
+        #use filter overrides to calls widget to pass boostrap classes
+        filter_overrides = {
+            models.CharField: {
+                'filter_class': django_filters.CharFilter,
+                'extra': lambda f: {
+                    'widget': forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}),
+                },
+            },
+            models.CharField: {
+                'filter_class': django_filters.CharFilter,
+                'extra': lambda f: {
+                    'widget': forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}),
+                },
+            },
+        }
+```
+It's exactly same with forms but instead of using widget here we user filter_overrides to add bootstrap classes.
+
 ## Models
 This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the databae. Models are the tables in the database.
 ```
