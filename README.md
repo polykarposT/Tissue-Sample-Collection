@@ -35,7 +35,7 @@ To create your app, make sure you’re in the same directory as manage.py and ty
 ```
 python manage.py startapp tissue_collection
 ```
-That’ll create a directory polls, which is laid out like this:
+That’ll create a directory tissue_collection, which is laid out like this:
 ```
 tissue_collection/
     __init__.py
