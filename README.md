@@ -5,7 +5,7 @@ contained within a larger collection of samples.
 
 
 ## Requirements
-To be able to run the project you need to have installed python (python >= 3.8) and Django framework (3.1.2). Django framework can be install via pip:
+To be able to run the project you need to have installed python (python >= 3.8) and Django framework (3.1.2). Django framework can be installed via pip:
 ```
 pip install Django
 ```
@@ -21,7 +21,7 @@ django-admin startproject tissue_sample
 ```
 Tissue_sample is the name of the project.
 
-After this command you will be able to see in the directory a new folder with the name of the project. In order to get in folder type:
+After this command you will be able to see in the directory a new folder with the name of the project. In order to get in the folder type:
 ```
 cd tissue_sample
 ```
@@ -104,7 +104,7 @@ class SampleUpdateForm(forms.ModelForm):
             'material_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '"Cerebrospinal fluid"', 'required': 'true', 'type': 'text'})
         }
 ```
-To create forms you need to make class with the name you wish, add 'Form' at the end. Inside the form class you declare which model this form  refer to and the fields you want to show at the template. Widgets will help you pass bootstrap classes.You will use the forms in views.py of the project so you need to add them in that file.
+To create forms you need to make class with the name you wish, adding 'Form' at the end. Inside the form class you declare which model this form refers to and the fields you want to be demostrated in the template. Widgets will help you pass bootstrap classes.You will use the forms in views.py of the project so you need to add them in that file.
 ```from .forms import CollectionForm, SampleForm, SampleUpdateForm```
 The last thing to do before you start building views functions is to create a django filter for search purposes.
 
@@ -143,7 +143,7 @@ class CollectionFilter(django_filters.FilterSet):
 It's exactly the same with forms but instead of using widget here you use filter_overrides to add bootstrap classes.
 
 ## Models
-This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the database. Models are the tables in the database.
+This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the database. The Models are the tables in the database.
 ```
 from django.db import models
 
@@ -169,7 +169,7 @@ class Sample(models.Model):
 
 ```
 The variables you declare in every class are actually the columns of the tables. Inside the classes you add the ``` def __str__``` function to return the data by desease_term and sample ID for readability purposes because it is better to return "Test 1" than "<Collection: Collection object(1)>".
-If you watch carefully you will notice that you didn't add a primary key and the reason for that is that Django is doing it automatically for you. Naturally, that's the case only if you want the primary key to be a numeric form, like 1,2,3.
+If you watch carefully you will notice that you didn't add a primary key and the reason for that is that Django is doing it automatically for you. Naturally, that's the case only if you want the primary key to be in numeric form, like 1,2,3.
 
 Django provides an admin page and the philosophy is to generate admin sites to add, change, and delete content which is a tedious work that doesn’t require much creativity. For this reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to follow 3 easy steps.
 
@@ -230,7 +230,7 @@ urlpatterns = [
     path('create_collection/', views.create_collection, name='create_collection'),
 ]
 ```
-Path containes the url, for example ```samples/```, a view function that performs an action and a name for this path that you will use in html templates for the url .
+Path contains the url, for example ```samples/```, a view function that performs an action and a name for this path that you will use in html templates for the url .
 All those paths are the urls of the project.
 Now you need to open ```urls.py``` from tissue_sample folder and include the urls from the tissue_collection folder. In the urls.py of tissue_sample add:
 ```
@@ -253,7 +253,7 @@ def index(request):
     context = {'collections': collections, 'form': form, 'collections_filter': collections_filter} #build our context with data to print them in front end
     return render(request, 'collection/index.html', context) #return our index page with context data
 ```
-The url for this function is ```index```
+URL= ```index```
 
 ### Samples function view
 Returns all samples
@@ -263,7 +263,7 @@ def samples(request):
     context = {'samples': samples}
     return render(request, 'collection/samples.html', context)
 ```
-The url for this function is ```samples/```
+URL ```samples/```
 
 ### Sample function view
 Takes as arguments a request and a sample_id and returns all the information of the sample with this id.
@@ -285,10 +285,10 @@ def collection(request, collection_id):
     context = {'collection': collection, 'samples': samples, 'sample_form': sample_form,}
     return render(request, 'collection/collection.html', context)
 ```
-The url for this function is ```collection/<int:collection_id>/```
+URL= ```collection/<int:collection_id>/```
 
 ### Create collection function view
-Create a collection. Because you created the CollectionForm previously, django will handle the data for you. 
+Creates a collection. Because you created the CollectionForm previously, django will handle the data for you. 
 ```
 desease_term    text not null
 title           text not null
@@ -336,10 +336,10 @@ def update_collection(request, collection_id):
     context = {'form': form, 'collection': collection}
     return render(request, 'collection/update_collection.html', context)
 ```
-The ure = ```collection/<int: collection_id>/update/```
+URL = ```collection/<int: collection_id>/update/```
 
 ### Delete collection function view
-Delete a collection with specific id. If you delete this function you also delete all the samples of this collection.
+Deletes a collection with specific id. If you delete this function you also delete all the samples of this collection.
 ```
 def delete_collection(request, collection_id):
     collection = get_object_or_404(Collection, id=collection_id) #return collection wiht specific id of 404
@@ -352,10 +352,10 @@ def delete_collection(request, collection_id):
     return render(request, 'collection/delete_collection.html', context)
     
 ```
-The URL = ```collection/<int: collection_id>/update/```
+URL = ```collection/<int: collection_id>/update/```
 
 ### Create Sample function view
-Create a Sample for an existing collection. You can create new sample only when you are in the details of an existing collection. Here again djnago will automatically handle everything. You will to pass in the function the collection id in order to use it as a foreign key.
+Creates a Sample for an existing collection. You can create new sample only when you are in the details of an existing collection. Here again djnago will automatically handle everything. You will to pass in the function the collection id in order to use it as a foreign key.
 ```
 donor_count     int not null not negative
 material_type   text not null
@@ -383,7 +383,7 @@ def create_sample(request, collection_id):
 
     return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
 ```
-The url = ```collection/<int:collection_id>/create_sample/```
+URL = ```collection/<int:collection_id>/create_sample/```
 
 ### Update Sample function view
 Updates a sample with specific id(sample_id).
