@@ -66,8 +66,8 @@ INSTALLED_APPS = [
 
 ```
 ## Forms
-Create a ```forms.py``` in the tissue_collection directory. There we created 3 forms to create and Update Collections and Samples.
-We use django forms because django provide functions to valiodated form data easy.
+Create a ```forms.py``` in the tissue_collection directory. There you created 3 forms to create and Update Collections and Samples.
+you use django forms because django provide functions to valiodated form data easy.
 ```
 from django import forms
 from .models import Collection, Sample
@@ -104,12 +104,12 @@ class SampleUpdateForm(forms.ModelForm):
             'material_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '"Cerebrospinal fluid"', 'required': 'true', 'type': 'text'})
         }
 ```
-We create forms like class. Inside the form class we declare for which model this from is and the fields we want to show at the front end. Widgets are only to pass bootstrap classes. The forms will we use them in views of the project so we need to add them in views.py file.
+you create forms like class. Inside the form class you declare for which model this from is and the fields you want to show at the front end. Widgets are only to pass bootstrap classes. The forms will you use them in views of the project so you need to add them in views.py file.
 ```from .forms import CollectionForm, SampleForm, SampleUpdateForm```
 The last thing to do before start views functions is to create a django filter for search perpuses.
 
 ## Filters
-Django-filter provides a simple way to filter down a queryset based on parameters a user provides. We need to add it to ```settings.py``` file but we already did it previusly as we add also ```tissue_collection```
+Django-filter provides a simple way to filter down a queryset based on parameters a user provides. you need to add it to ```settings.py``` file but you already did it previusly as you add also ```tissue_collection```
 Filters are same, like forms. Create a file in the tissue_collection directory with name ```filters.py``` and add
 ```
 import django_filters
@@ -140,7 +140,7 @@ class CollectionFilter(django_filters.FilterSet):
             },
         }
 ```
-It's exactly same with forms but instead of using widget here we user filter_overrides to add bootstrap classes.
+It's exactly same with forms but instead of using widget here you user filter_overrides to add bootstrap classes.
 
 ## Models
 This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the databae. Models are the tables in the database.
@@ -168,8 +168,8 @@ class Sample(models.Model):
 
 
 ```
-The variables in every class are actually the columns of the tables. Inside the classes we added the ``` def __str__``` function to return the data by desease_term. The reason is for readability perpuse because is better to see "Test 1" from "<Collection: Collection object(1)".
-If you watch carefully you will see that we didn't add a primary key and the reason is bacause Django is doing it automatically. Of course it's only if you want to primary keys like 1,2,3.
+The variables in every class are actually the columns of the tables. Inside the classes you added the ``` def __str__``` function to return the data by desease_term. The reason is for readability perpuse because is better to see "Test 1" from "<Collection: Collection object(1)".
+If you watch carefully you will see that you didn't add a primary key and the reason is bacause Django is doing it automatically. Of course it's only if you want to primary keys like 1,2,3.
 
 Django provides an admin page and the phylosophy is to generating admin sites to add, change, and delete content is tedious work that doesn’t require much creativity. For that reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to do 3 easy steps.
 
@@ -187,7 +187,7 @@ admin.site.register(Sample)
 2) In the same directory with ```manage.py``` file run the following commands in terminal:
 ```
 python manage.py makemigrations 
-python manage.py migrate #create database for the project as we defined it the models.py file
+python manage.py migrate #create database for the project as you defined it the models.py file
 
 python manage.py createsuperuser #to use admin pane you need to create an admin account
 ```
@@ -201,14 +201,14 @@ Now you can add data from here!
 ## HTML Templates
 In the tissue_collection directory create a new folder with name ```templates``` and inside templates folder create a new folder with name ```collection```. There are all the html code for the project.
 
-Create a ```base.html``` file which has all the bootstrap and javascript libraries we need for the project. Django use jinga for frint end so we will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statement, django urls and build block content.
+Create a ```base.html``` file which has all the bootstrap and javascript libraries you need for the project. Django use jinga for frint end so you will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statement, django urls and build block content.
 
 For example if you have an ```<a href=""></>``` tag and you want to go to another page for example all samples tag will be like this ```<a href="{% url 'samples' %}">All samples</a>```
 
 To use view function with id argument the tag will be ``` <a href="{% url 'sample' sample_id= sample.id %}"```. Sample_id is the name in your urls and the argument in sample view.
 
 ## Views & URLS
-In views.py file we create all the neccasary functions to make projects working. In views you can handle data, make queries and forms and render html templates. To make views workind we need to create a ```urls.py```file in the tissue_collection directory. After we created the file add the following code:
+In views.py file you create all the neccasary functions to make projects working. In views you can handle data, make queries and forms and render html templates. To make views workind you need to create a ```urls.py```file in the tissue_collection directory. After you created the file add the following code:
 ```
 from django.urls import path
 from . import views
@@ -231,7 +231,7 @@ urlpatterns = [
 ]
 ```
 Path has the url for example ```samples/```, a view function tha does something, and a name for this path.
-Don't worry for now all those paths are the urls of the projects. We will see them in a while.
+Don't worry for now all those paths are the urls of the projects. you will see them in a while.
 Now your need to open ```urls.py``` from tissue_sample folder and include the urls from tissue_collection folder. So in the urls.py of tissue_sample add:
 ```
 from django.contrib import admin
@@ -288,7 +288,7 @@ def collection(request, collection_id):
 URL for this function is ```collection/<int:collection_id>/```
 
 ### Create collection function view
-Create a collection. Because we created the CollectionForm previusly django handle the data for us. 
+Create a collection. Because you created the CollectionForm previusly django handle the data for us. 
 ```
 desease_term    text not null
 title           text not null
@@ -343,7 +343,7 @@ Delete a function with specific id. If you delete this function you also delete 
 ```
 def delete_collection(request, collection_id):
     collection = get_object_or_404(Collection, id=collection_id) #return collection wiht specific id of 404
-    samples = collection.sample_set.all() #if we delete a colletion we will delete also all collection's samples
+    samples = collection.sample_set.all() #if you delete a colletion you will delete also all collection's samples
     if request.method == "POST": #check if method is POST to delete collection
         collection.delete()
         return redirect('index')
@@ -375,7 +375,7 @@ def create_sample(request, collection_id):
             sample = Sample(collection=collection, donor_count=donor_count,
                             material_type=material_type, last_updated=date_now)
             sample.save()
-            #if everything is ok return to this specific collection. We need to use reverse to pass collection id to be able to redirect
+            #if everything is ok return to this specific collection. you need to use reverse to pass collection id to be able to redirect
             return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
         else:
             messages.error(request, 'Please enter valid information')
