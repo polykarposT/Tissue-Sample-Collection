@@ -1,5 +1,5 @@
 # Tissue-Sample-Collection
-Tissue Sample Collection Wep App an administrative interface for a system that allow
+Tissue Sample Collection Web App is an administrative interface for a system that allows
 a Tissue Sample directory to keep track of the number of samples with certain characteristics
 contained within a larger collection of samples.
 
@@ -9,7 +9,7 @@ To be able to run the project you need to have installed python (python >= 3.8) 
 ```
 pip install Django
 ```
-For this project you need to install also django-filters
+For this project you also need to install django-filters.
 ```
 pip install django-filter
 ```
@@ -19,15 +19,15 @@ In the directory that you want to create the project open a terminal or command 
 ```
 django-admin startproject tissue_sample
 ```
-Tissue_sample is the name of the project
+Tissue_sample is the name of the project.
 
-After this command you will be able to see in the directory a new folder with the name of the projet. Get in the folder.
+After this command you will be able to see in the directory a new folder with the name of the project. In order to get in folder type:
 ```
 cd tissue_sample
 ```
 
-In the folder there are an another folder with tha same name as the project(tissue_sample) and manage.py file.
-Let's verify your Django projects works.Run the following command:
+In the folder there is an another folder with the same name as the project(tissue_sample) and a manage.py file.
+Let's verify your Django project works.Run the following command:
 ```
 python manage.py runserver  or
 python3 manage.py runserver
@@ -66,8 +66,8 @@ INSTALLED_APPS = [
 
 ```
 ## Forms
-Create a ```forms.py``` in the tissue_collection directory. There create 3 forms for create and Update Collections and Samples.
-You use django forms because django provides functions to valiodate form data easy.
+Create a ```forms.py``` in the tissue_collection directory.In the forms.py file create 3 forms to create and Update Collections and Samples.
+Django forms is used because it provides functions to validate form data easily.
 ```
 from django import forms
 from .models import Collection, Sample
@@ -104,13 +104,13 @@ class SampleUpdateForm(forms.ModelForm):
             'material_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '"Cerebrospinal fluid"', 'required': 'true', 'type': 'text'})
         }
 ```
-You create forms like class. Inside the form class you declare which model this form is and the fields you want to show at the template. Widgets will helps you pass bootstrap classes.You will use them the forms in views of the project so you need to add them in views.py file.
+To create forms you need to make class with the name you wish, add 'Form' at the end. Inside the form class you declare which model this form  refer to and the fields you want to show at the template. Widgets will help you pass bootstrap classes.You will use the forms in views.py of the project so you need to add them in that file.
 ```from .forms import CollectionForm, SampleForm, SampleUpdateForm```
-The last thing to do before start building views functions is to create a django filter for search perpuses.
+The last thing to do before you start building views functions is to create a django filter for search purposes.
 
 ## Filters
-Django-filter provides a simple way to filter down a queryset based on parameters a user provides. You need to add it to ```settings.py``` file where you previusly added ```tissue_collection```
-Filters and forms forms are almost same. Create a file in the tissue_collection directory with name ```filters.py``` and add
+Django-filter provides a simple way to filter down a queryset based on parameters the user provides. You need to add it to ```settings.py``` file where you previously added ```tissue_collection```.
+Filters and forms are almost the same. Create a file in the tissue_collection directory with the name ```filters.py``` and add
 ```
 import django_filters
 from django import forms
@@ -140,10 +140,10 @@ class CollectionFilter(django_filters.FilterSet):
             },
         }
 ```
-It's exactly same with forms but instead of using widget here you use filter_overrides to add bootstrap classes.
+It's exactly the same with forms but instead of using widget here you use filter_overrides to add bootstrap classes.
 
 ## Models
-This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the databae. Models are the tables in the database.
+This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the database. Models are the tables in the database.
 ```
 from django.db import models
 
@@ -168,10 +168,10 @@ class Sample(models.Model):
 
 
 ```
-The variables you declare in every class are actually the columns of the tables. Inside the classes you added the ``` def __str__``` is a function to return the data by desease_term and sample id. The reason is for readability perpuses because is better to see "Test 1" from "<Collection: Collection object(1)>".
-If you watch carefully you will see that you didn't add a primary key and the reason is bacause Django is doing it automatically for us. Of course it's only if you want the primary key be like 1,2,3.
+The variables you declare in every class are actually the columns of the tables. Inside the classes you add the ``` def __str__``` function to return the data by desease_term and sample ID for readability purposes because it is better to return "Test 1" than "<Collection: Collection object(1)>".
+If you watch carefully you will notice that you didn't add a primary key and the reason for that is that Django is doing it automatically for you. Naturally, that's the case only if you want the primary key to be a numeric form, like 1,2,3.
 
-Django provides an admin page and the phylosophy is to generating admin sites to add, change, and delete content is tedious work that doesn’t require much creativity. For that reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to do 3 easy steps.
+Django provides an admin page and the philosophy is to generate admin sites to add, change, and delete content which is a tedious work that doesn’t require much creativity. For this reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to follow 3 easy steps.
 
 1) go to admin.py and add the following code:
 ```
@@ -199,16 +199,16 @@ password: test1234
 Now you can add data from here!
 
 ## HTML Templates
-In the tissue_collection directory create a new folder with name ```templates``` and inside templates folder create a new folder with name ```collection```. There are all the html code for the project.
+In the tissue_collection directory create a new folder with the name ```templates``` and inside the templates folder create a new folder with the name ```collection```. There you will find the entire html code for the project.
 
-Create a ```base.html``` file which has all the bootstrap and javascript libraries you need for the project. Django use jinga for front end so you will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statements, django urls and build block contents.
+Create a ```base.html``` file which has all the bootstrap and javascript libraries you need for the project. Django uses jinja for front end so you will use ```{{ }}``` to print data and ```{% %}``` to make loops, if-statements, django-urls and to build block contents.
 
-For example if you have an ```<a href=""></>``` tag and you want to go to another page for example all samples tag will be like this ```<a href="{% url 'samples' %}">All samples</a>```
+For example, if you have a ```<a href=""></>``` tag and you want to go to another page such as the all samples the tag will look this ```<a href="{% url 'samples' %}">All samples</a>```
 
-To use view function with id argument the tag will be ``` <a href="{% url 'sample' sample_id= sample.id %}"```. Sample_id is the name in your urls and the argument in sample view.
+To use the view function with the ID argument the tag will be ``` <a href="{% url 'sample' sample_id= sample.id %}"```. Sample_id will be the name appearing in your urls as well as the argument in sample view.
 
 ## Views & URLS
-In views.py file you create all the neccasary functions to make projects working. In views you can handle data, make queries and forms and render html templates. To make views workind you need to create a ```urls.py```file in the tissue_collection directory. After you created the file add the following code:
+In views.py file you create all the necessary functions to make the project work. In views you can handle data, make queries and forms and render html templates. To make views work you need to create a ```urls.py```file in the tissue_collection directory. After you create the file add the following code:
 ```
 from django.urls import path
 from . import views
@@ -230,9 +230,9 @@ urlpatterns = [
     path('create_collection/', views.create_collection, name='create_collection'),
 ]
 ```
-Path has the url for example ```samples/```, a view function that does something and a name for this path that you will use it to in html templates for the urls .
-Don't worry for now all those paths are the urls of the projects. You will see them in a while.
-Now you need to open ```urls.py``` from tissue_sample folder and include the urls from tissue_collection folder. So in the urls.py of tissue_sample add:
+Path containes the url, for example ```samples/```, a view function that performs an action and a name for this path that you will use in html templates for the url .
+All those paths are the urls of the project.
+Now you need to open ```urls.py``` from tissue_sample folder and include the urls from the tissue_collection folder. In the urls.py of tissue_sample add:
 ```
 from django.contrib import admin
 from django.urls import path, include
@@ -243,7 +243,7 @@ urlpatterns = [
 ```
 
 ### Index function view
-Index function has as argument a request (POST or GET) and returns a html tamplete and a context which have all the data the form to create new collection, all collections, collections filter for the search form.
+Index function takes as argument a request (POST or GET) and returns an html template and a context which has all the data, meaning the form to create new collection, all collections and collections filter for the search form.
 ```
 def index(request):
     form = CollectionForm() #create collection form
@@ -253,7 +253,7 @@ def index(request):
     context = {'collections': collections, 'form': form, 'collections_filter': collections_filter} #build our context with data to print them in front end
     return render(request, 'collection/index.html', context) #return our index page with context data
 ```
-Url for this function is ```index```
+The url for this function is ```index```
 
 ### Samples function view
 Returns all samples
@@ -263,7 +263,7 @@ def samples(request):
     context = {'samples': samples}
     return render(request, 'collection/samples.html', context)
 ```
-Url for this function is ```samples/```
+The url for this function is ```samples/```
 
 ### Sample function view
 Takes as arguments a request and a sample_id and returns all the information of the sample with this id.
@@ -273,7 +273,7 @@ def sample(request,sample_id):
     context = {'sample': sample}
     return render(request, 'collection/sample.html', context)
 ```
-URL for this function is ```sample/<int:sample_id/>```. The int in the url is to let django know that there is an argument whiuch is int.
+The url for this function is ```sample/<int:sample_id/>```. The int in the url is to let django know that there is an argument which is int.
 
 ### Collection function view
 Takes as arguments a request and a sample_id and returns all the information of the collection with this id
@@ -285,10 +285,10 @@ def collection(request, collection_id):
     context = {'collection': collection, 'samples': samples, 'sample_form': sample_form,}
     return render(request, 'collection/collection.html', context)
 ```
-URL for this function is ```collection/<int:collection_id>/```
+The url for this function is ```collection/<int:collection_id>/```
 
 ### Create collection function view
-Create a collection. Because you created the CollectionForm previusly django handle the data for us. 
+Create a collection. Because you created the CollectionForm previously, django will handle the data for you. 
 ```
 desease_term    text not null
 title           text not null
@@ -317,7 +317,7 @@ def create_collection(request):
 URL = ```create_collection/```
 
 ### Update Collection function view
-Updates an existing collection with specific id. To execute the function you need to pass the collection_id and in the update form as previusly django handle everything.
+Updates an existing collection with specific id. To execute the function you need to pass the collection_id and in the update form, django will handle everything as mentioned before.
 ```
 desease_term    text not null
 title           text not null
@@ -336,7 +336,7 @@ def update_collection(request, collection_id):
     context = {'form': form, 'collection': collection}
     return render(request, 'collection/update_collection.html', context)
 ```
-URL = ```collection/<int: collection_id>/update/```
+The ure = ```collection/<int: collection_id>/update/```
 
 ### Delete collection function view
 Delete a collection with specific id. If you delete this function you also delete all the samples of this collection.
@@ -352,15 +352,15 @@ def delete_collection(request, collection_id):
     return render(request, 'collection/delete_collection.html', context)
     
 ```
-URL = ```collection/<int: collection_id>/update/```
+The URL = ```collection/<int: collection_id>/update/```
 
 ### Create Sample function view
-Create a Sample for an existing collection. You can create new sample only ehrn you are in the details of an existing collection. Here again djnago handle everything. Also you pass to the function the collection id because you need it to pass it as foreign key.
+Create a Sample for an existing collection. You can create new sample only when you are in the details of an existing collection. Here again djnago will automatically handle everything. You will to pass in the function the collection id in order to use it as a foreign key.
 ```
 donor_count     int not null not negative
 material_type   text not null
 ```
-Date for last updated handle it from database.
+The last updated field will be handled from the database.
 
 ```
 def create_sample(request, collection_id):
@@ -383,7 +383,7 @@ def create_sample(request, collection_id):
 
     return redirect(reverse('collection', kwargs={'collection_id': collection_id}))
 ```
-URL = ```collection/<int:collection_id>/create_sample/```
+The url = ```collection/<int:collection_id>/create_sample/```
 
 ### Update Sample function view
 Updates a sample with specific id(sample_id).
@@ -409,7 +409,7 @@ def update_sample(request, sample_id):
 URL = ```sample<int: sample_id>/update/```
 
 ### Delete Sample function view
-Delete a sample with specific id.
+Deletes a sample with specific id.
 ```
 def delete_sample(request, sample_id):
     sample = get_object_or_404(Sample, id=sample_id)
@@ -425,8 +425,8 @@ URL = ```sample/<int: sample_id>/delete/```
 
 ## EXECUTE THE PROJECT
 Download repo using ```git clone ``` or if you have the zip file unizip it in the directory you want.
-To run the project you need to have python (python >=3.8), Django Framework(3.1.2) and django-filters installed before you run the project. After in the same directory with ```manage.py``` file run the following command :
+To run the project you need to have python (python >=3.8), Django Framework(3.1.2) and django-filters installed before you run the project. After that, in the same directory with ```manage.py``` file run the following command :
 ```python manage.py runserver```
 If you have python 2 and python 3 in your system and python3 is not the default maybe you will need to run :
 ```python3 manage.py runserver```
-Now you are ready to visit 127.0.0.1:8000
+Now you are ready to visit 127.0.0.1:8000!
