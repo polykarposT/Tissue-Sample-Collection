@@ -5,11 +5,11 @@ contained within a larger collection of samples.
 
 
 ## Requirements
-To be able to run the project need to have installed python (python >= 3.8) and Django framework (3.1.2). Django framework can be install via pip:
+To be able to run the project you need to have installed python (python >= 3.8) and Django framework (3.1.2). Django framework can be install via pip:
 ```
 pip install Django
 ```
-For this project have to install also django-filters
+For this project you need to install also django-filters
 ```
 pip install django-filter
 ```
@@ -66,8 +66,8 @@ INSTALLED_APPS = [
 
 ```
 ## Forms
-Create a ```forms.py``` in the tissue_collection directory. There you created 3 forms to create and Update Collections and Samples.
-you use django forms because django provide functions to valiodated form data easy.
+Create a ```forms.py``` in the tissue_collection directory. There create 3 forms for create and Update Collections and Samples.
+You use django forms because django provides functions to valiodate form data easy.
 ```
 from django import forms
 from .models import Collection, Sample
@@ -104,13 +104,13 @@ class SampleUpdateForm(forms.ModelForm):
             'material_type': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '"Cerebrospinal fluid"', 'required': 'true', 'type': 'text'})
         }
 ```
-you create forms like class. Inside the form class you declare for which model this from is and the fields you want to show at the front end. Widgets are only to pass bootstrap classes. The forms will you use them in views of the project so you need to add them in views.py file.
+You create forms like class. Inside the form class you declare which model this form is and the fields you want to show at the template. Widgets will helps you pass bootstrap classes.You will use them the forms in views of the project so you need to add them in views.py file.
 ```from .forms import CollectionForm, SampleForm, SampleUpdateForm```
-The last thing to do before start views functions is to create a django filter for search perpuses.
+The last thing to do before start building views functions is to create a django filter for search perpuses.
 
 ## Filters
-Django-filter provides a simple way to filter down a queryset based on parameters a user provides. you need to add it to ```settings.py``` file but you already did it previusly as you add also ```tissue_collection```
-Filters are same, like forms. Create a file in the tissue_collection directory with name ```filters.py``` and add
+Django-filter provides a simple way to filter down a queryset based on parameters a user provides. You need to add it to ```settings.py``` file where you previusly added ```tissue_collection```
+Filters and forms forms are almost same. Create a file in the tissue_collection directory with name ```filters.py``` and add
 ```
 import django_filters
 from django import forms
@@ -140,7 +140,7 @@ class CollectionFilter(django_filters.FilterSet):
             },
         }
 ```
-It's exactly same with forms but instead of using widget here you user filter_overrides to add bootstrap classes.
+It's exactly same with forms but instead of using widget here you use filter_overrides to add bootstrap classes.
 
 ## Models
 This project uses the default database which is SQLite. In tissue_collection directory and in the models.py file add the following code to describe what the web app will store in the databae. Models are the tables in the database.
@@ -168,8 +168,8 @@ class Sample(models.Model):
 
 
 ```
-The variables in every class are actually the columns of the tables. Inside the classes you added the ``` def __str__``` function to return the data by desease_term. The reason is for readability perpuse because is better to see "Test 1" from "<Collection: Collection object(1)".
-If you watch carefully you will see that you didn't add a primary key and the reason is bacause Django is doing it automatically. Of course it's only if you want to primary keys like 1,2,3.
+The variables you declare in every class are actually the columns of the tables. Inside the classes you added the ``` def __str__``` is a function to return the data by desease_term and sample id. The reason is for readability perpuses because is better to see "Test 1" from "<Collection: Collection object(1)>".
+If you watch carefully you will see that you didn't add a primary key and the reason is bacause Django is doing it automatically for us. Of course it's only if you want the primary key be like 1,2,3.
 
 Django provides an admin page and the phylosophy is to generating admin sites to add, change, and delete content is tedious work that doesn’t require much creativity. For that reason, Django entirely automates creation of admin interfaces for models. To use this featrure you need to do 3 easy steps.
 
@@ -191,7 +191,7 @@ python manage.py migrate #create database for the project as you defined it the 
 
 python manage.py createsuperuser #to use admin pane you need to create an admin account
 ```
-3) You are ready! Now visit  http://127.0.0.1:8000/admin/ and login with the username and password you add. In this project the credentials are:
+3) You are ready to go! Now visit  http://127.0.0.1:8000/admin/ and login with the username and password you added. In this project the credentials are:
 ```
 username: testUser
 password: test1234
@@ -201,7 +201,7 @@ Now you can add data from here!
 ## HTML Templates
 In the tissue_collection directory create a new folder with name ```templates``` and inside templates folder create a new folder with name ```collection```. There are all the html code for the project.
 
-Create a ```base.html``` file which has all the bootstrap and javascript libraries you need for the project. Django use jinga for frint end so you will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statement, django urls and build block content.
+Create a ```base.html``` file which has all the bootstrap and javascript libraries you need for the project. Django use jinga for front end so you will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statements, django urls and build block contents.
 
 For example if you have an ```<a href=""></>``` tag and you want to go to another page for example all samples tag will be like this ```<a href="{% url 'samples' %}">All samples</a>```
 
@@ -230,9 +230,9 @@ urlpatterns = [
     path('create_collection/', views.create_collection, name='create_collection'),
 ]
 ```
-Path has the url for example ```samples/```, a view function tha does something, and a name for this path.
-Don't worry for now all those paths are the urls of the projects. you will see them in a while.
-Now your need to open ```urls.py``` from tissue_sample folder and include the urls from tissue_collection folder. So in the urls.py of tissue_sample add:
+Path has the url for example ```samples/```, a view function that does something and a name for this path that you will use it to in html templates for the urls .
+Don't worry for now all those paths are the urls of the projects. You will see them in a while.
+Now you need to open ```urls.py``` from tissue_sample folder and include the urls from tissue_collection folder. So in the urls.py of tissue_sample add:
 ```
 from django.contrib import admin
 from django.urls import path, include
@@ -242,7 +242,7 @@ urlpatterns = [
 ]
 ```
 
-### index function view
+### Index function view
 Index function has as argument a request (POST or GET) and returns a html tamplete and a context which have all the data the form to create new collection, all collections, collections filter for the search form.
 ```
 def index(request):
@@ -317,7 +317,7 @@ def create_collection(request):
 URL = ```create_collection/```
 
 ### Update Collection function view
-Updates a existing collection. To execute the function you need to pass the collection_id and in the update form as previusly django handle everythin.
+Updates an existing collection with specific id. To execute the function you need to pass the collection_id and in the update form as previusly django handle everything.
 ```
 desease_term    text not null
 title           text not null
@@ -339,7 +339,7 @@ def update_collection(request, collection_id):
 URL = ```collection/<int: collection_id>/update/```
 
 ### Delete collection function view
-Delete a function with specific id. If you delete this function you also delete all the samples of this collection.
+Delete a collection with specific id. If you delete this function you also delete all the samples of this collection.
 ```
 def delete_collection(request, collection_id):
     collection = get_object_or_404(Collection, id=collection_id) #return collection wiht specific id of 404
@@ -355,7 +355,7 @@ def delete_collection(request, collection_id):
 URL = ```collection/<int: collection_id>/update/```
 
 ### Create Sample function view
-Create a Sample for an existing collection. You can create new sample only inside of an existing collection. Here again djnago handle everything. Here also you pass the collection id because you need it to pass it as foreign key.
+Create a Sample for an existing collection. You can create new sample only ehrn you are in the details of an existing collection. Here again djnago handle everything. Also you pass to the function the collection id because you need it to pass it as foreign key.
 ```
 donor_count     int not null not negative
 material_type   text not null
@@ -424,9 +424,9 @@ def delete_sample(request, sample_id):
 URL = ```sample/<int: sample_id>/delete/```
 
 ## EXECUTE THE PROJECT
-Download repo using ```git clone ``` or if you have zip file unizip it in the directory you want.
-To run the project you need to be in the samne directory with ```manage.py``` file  and run the following command :
+Download repo using ```git clone ``` or if you have the zip file unizip it in the directory you want.
+To run the project you need to have python (python >=3.8), Django Framework(3.1.2) and django-filters installed before you run the project. After in the same directory with ```manage.py``` file run the following command :
 ```python manage.py runserver```
-If you have python 2 and python 3 in your system maybe you need to run :
+If you have python 2 and python 3 in your system and python3 is not the default maybe you will need to run :
 ```python3 manage.py runserver```
 Now you are ready to visit 127.0.0.1:8000
