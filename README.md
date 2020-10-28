@@ -203,6 +203,10 @@ In the tissue_collection directory create a new folder with name ```templates```
 
 Create a ```base.html``` file which has all the bootstrap and javascript libraries we need for the project. Django use jinga for frint end so we will use ```{{ }}``` to print data and ```{% %}``` to make for loops, if statement, django urls and build block content.
 
+For example if you have an ```<a href=""></>``` tag and you want to go to another page for example all samples tag will be like this ```<a href="{% url 'samples' %}">All samples</a>```
+
+To use view function with id argument the tag will be ``` <a href="{% url 'sample' sample_id= sample.id %}"```. Sample_id is the name in your urls and the argument in sample view.
+
 ## Views & URLS
 In views.py file we create all the neccasary functions to make projects working. In views you can handle data, make queries and forms and render html templates. To make views workind we need to create a ```urls.py```file in the tissue_collection directory. After we created the file add the following code:
 ```
@@ -418,3 +422,11 @@ def delete_sample(request, sample_id):
     return render(request, 'collection/delete_sample.html', context)
 ```
 URL = ```sample/<int: sample_id>/delete/```
+
+## EXECUTE THE PROJECT
+Download repo using ```git clone ``` or if you have zip file unizip it in the directory you want.
+To run the project you need to be in the samne directory with ```manage.py``` file  and run the following command :
+```python manage.py runserver```
+If you have python 2 and python 3 in your system maybe you need to run :
+```python3 manage.py runserver```
+Now you are ready to visit 127.0.0.1:8000
